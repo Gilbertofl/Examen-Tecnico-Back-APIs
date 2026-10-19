@@ -1,0 +1,37 @@
+[
+  {
+    "id": "b7a87b3c-af87-40c7-9e3b-54f99eb10f10",
+    "nombre": "Mariana López Hernández",
+    "correo": "mariana.lopez@empresa.mx",
+    "puesto": "Desarrolladora Backend",
+    "eliminadoEn": null
+  },
+  {
+    "id": "1847a2b5-d0fa-412c-80da-ad6508668fb2",
+    "nombre": "Carlos Ramírez Gómez",
+    "correo": "carlos.ramirez@empresa.mx",
+    "puesto": "Analista de Datos",
+    "eliminadoEn": null
+  },
+  {
+    "id": "0d1447fd-920e-477b-890c-1c0433bd2b35",
+    "nombre": "Fernanda Ruiz Vázquez",
+    "correo": "fernanda.ruiz@empresa.mx",
+    "puesto": "Diseñadora UX",
+    "eliminadoEn": null
+  },
+  {
+    "id": "8d3f4135-88b9-4e0c-9f02-49eaea034245",
+    "nombre": "Luis Ortega Sánchez",
+    "correo": "luis.ortega@empresa.mx",
+    "puesto": "Líder de Proyecto",
+    "eliminadoEn": null
+  },
+  {
+    "id": "36be6c61-45d9-472b-9ab7-2a3fe588d801",
+    "nombre": "Daniela Torres Cruz",
+    "correo": "daniela.torres@empresa.mx",
+    "puesto": "Ingeniera de Calidad",
+    "eliminadoEn": null
+  }
+]
