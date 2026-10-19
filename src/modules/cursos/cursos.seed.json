@@ -1,0 +1,23 @@
+[
+  {
+    "id": "seguridad",
+    "titulo": "Seguridad de la información",
+    "lecciones": [
+      { "id": "seg-01", "titulo": "Principios de seguridad", "orden": 1 },
+      { "id": "seg-02", "titulo": "Gestión de contraseñas", "orden": 2 },
+      { "id": "seg-03", "titulo": "Reconocimiento de phishing", "orden": 3 },
+      { "id": "seg-04", "titulo": "Manejo de incidentes", "orden": 4 }
+    ]
+  },
+  {
+    "id": "apis",
+    "titulo": "Diseño de APIs",
+    "lecciones": [
+      { "id": "api-01", "titulo": "Fundamentos de REST", "orden": 1 },
+      { "id": "api-02", "titulo": "Códigos de estado HTTP", "orden": 2 },
+      { "id": "api-03", "titulo": "Validación de datos de entrada", "orden": 3 },
+      { "id": "api-04", "titulo": "Manejo de errores", "orden": 4 },
+      { "id": "api-05", "titulo": "Documentación de endpoints", "orden": 5 }
+    ]
+  }
+]
