@@ -13,7 +13,17 @@ npm install
 npm run dev
 ```
 
-La API queda disponible en `http://localhost:3000/api`. El puerto se modifica con la variable `PORT` (ver `.env.example`).
+La API queda disponible en `http://localhost:3000/api`.
+
+### Configuración
+
+Las variables se definen en el entorno del proceso (por ejemplo, `set PORT=4000` en CMD antes de iniciar). El archivo `.env.example` documenta los valores disponibles.
+
+| Variable | Descripción | Valor por defecto |
+|---|---|---|
+| `PORT` | Puerto del servidor | `3000` |
+| `VIDEO_STORAGE_DIR` | Directorio donde se guardan los videos | `storage/videos` |
+| `MAX_VIDEO_SIZE_MB` | Tamaño máximo por video, en megabytes | `50` |
 
 | Script | Descripción |
 |---|---|
@@ -33,7 +43,8 @@ src/
 ├── modules/       un directorio por módulo funcional
 │   ├── colaboradores/
 │   ├── cursos/
-│   └── progreso/
+│   ├── progreso/
+│   └── videos/
 ├── routes/        registro de los módulos en la API
 ├── app.ts         configuración de Express
 └── server.ts      arranque del servidor
@@ -121,9 +132,48 @@ Respuesta de ejemplo de la consulta:
 }
 ```
 
+## Módulo 3: Carga segura de videos
+
+Los archivos se guardan en el disco local, en el directorio indicado por `VIDEO_STORAGE_DIR` (por defecto `storage/videos`, excluido del control de versiones). Los metadatos de cada video (identificador, colaborador, tamaño y fecha) se conservan en memoria.
+
+| Método | Ruta | Descripción | Respuestas |
+|---|---|---|---|
+| POST | `/api/colaboradores/:colaboradorId/videos` | Sube un video (`multipart/form-data`, campo `video`) | 201, 400, 404, 413, 415 |
+| GET | `/api/colaboradores/:colaboradorId/videos` | Lista los videos del colaborador | 200, 404 |
+| GET | `/api/colaboradores/:colaboradorId/videos/:videoId` | Entrega el video; admite solicitudes por rango | 200, 206, 404 |
+
+Ejemplo de carga:
+
+```bash
+curl -X POST http://localhost:3000/api/colaboradores/<id>/videos -F "video=@clip.mp4;type=video/mp4"
+```
+
+### Validaciones
+
+Un archivo debe superar cuatro controles para quedar almacenado:
+
+1. **Extensión y tipo declarado:** deben ser `.mp4` y `video/mp4`. Se verifican antes de escribir en disco; si no coinciden se responde 415.
+2. **Contenido real:** la extensión y el tipo los declara el cliente y pueden falsificarse. Por ello se verifica la firma `ftyp` en los bytes 4 a 7 de la cabecera del archivo. Si no coincide se responde 415 y el archivo se elimina.
+3. **Tamaño máximo:** 50 MB por defecto (configurable con `MAX_VIDEO_SIZE_MB`). Se considera adecuado para videos de capacitación breves y protege el espacio en disco. Al excederlo la carga se corta, se elimina lo recibido y se responde 413.
+4. **Un solo archivo por solicitud**, en el campo `video`; de lo contrario se responde 400.
+
+### Almacenamiento y acceso
+
+- El nombre en disco es un UUID generado por el servidor más la extensión `.mp4`. El nombre original del cliente no se utiliza. Ese mismo UUID es el identificador único del video.
+- La ruta del archivo se obtiene del registro del video, nunca de lo enviado en la URL, lo que evita el recorrido de rutas.
+- Un video solo se entrega al colaborador que lo subió; en cualquier otro caso se responde 404.
+- Todo archivo rechazado se elimina del disco.
+- La respuesta incluye `X-Content-Type-Options: nosniff` y soporta solicitudes por rango, lo que permite reproducir y avanzar el video desde un navegador.
+
+### Alcance
+
+- Los metadatos están en memoria: tras reiniciar el servidor los archivos permanecen en disco, pero dejan de listarse.
+- No se realiza análisis antivirus ni autenticación, ya que no forman parte de los requisitos.
+
 ## Decisiones técnicas
 
-- **Express y TypeScript**, el stack solicitado en la vacante.
+- **Express con TypeScript:** se eligieron por su compatibilidad con el stack de la vacante (Node.js y TypeScript). Express permite estructurar la API por capas con poca configuración y el modo estricto de TypeScript detecta errores antes de ejecutar.
 - **Validación con Zod:** los esquemas describen el formato esperado y producen mensajes de error claros.
 - **Errores centralizados:** los servicios lanzan errores HTTP tipados y un único middleware los convierte en respuesta.
+- **Carga con Multer:** el archivo se transmite directamente a disco en lugar de mantenerse completo en memoria.
 - **Persistencia en memoria:** al no existir base de datos, los cambios se pierden al reiniciar el servidor.
