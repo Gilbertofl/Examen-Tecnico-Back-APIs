@@ -32,6 +32,10 @@ Las variables se definen en el entorno del proceso (por ejemplo, `set PORT=4000`
 | `npm start` | Ejecuta la versión compilada |
 | `npm run check` | Verifica tipos sin compilar |
 
+## Pruebas
+
+El procedimiento para verificar cada módulo con Insomnia o Postman, con los casos de éxito y de error esperados, está en [GUIA_DE_PRUEBAS.md](GUIA_DE_PRUEBAS.md).
+
 ## Estructura
 
 ```
